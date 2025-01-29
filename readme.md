@@ -42,23 +42,29 @@ The system uses two different databases and a cache to complete the CAP operatio
     ```
 
 2. Install dependencies:
-    2.1 API dependencies:
-        ```sh
-        cd backend/url-shortener-api
-        pnpm install
-        ```
-    2.2 Redirect Server dependencies:
-        ```sh
-        cd backend/url-shortener-server
-        pnpm install
-        ```
-    2.3 API dependencies:
-        ```sh
-        cd frontend/url-shortener-web
-        pnpm install
-        ```
 
-3. Set up the databases:
+   2.1 API dependencies:
+
+   ```sh
+   cd backend/url-shortener-api
+   pnpm install
+   ```
+
+   2.2 Redirect Server dependencies:
+
+   ```sh
+   cd backend/url-shortener-server
+   pnpm install
+   ```
+
+   2.3 Client dependencies:
+
+   ```sh
+   cd frontend/url-shortener-web
+   pnpm install
+   ```
+
+4. Set up the databases:
     - **PostgreSQL**: Follow the instructions to set up a PostgreSQL database.
     - **DynamoDB**: Use the following command to create the table:
         ```sh
