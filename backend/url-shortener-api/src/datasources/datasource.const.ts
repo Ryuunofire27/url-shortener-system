@@ -1,0 +1,3 @@
+export const DATASOURCE_CONNECTION_NAMES = {
+  PG: 'DATASOURCE_PG'
+}

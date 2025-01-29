@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: url-shortener-api-dev
+  labels:
+    environment: dev
+    app: url-shortener-api-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: url-shortener-api-dev
+  template:
+    metadata:
+      labels:
+        app: url-shortener-api-dev
+    spec:
+      containers:
+        - name: url-shortener-api
+          image: url-shortener-api
+          imagePullPolicy: Never
+          resources:
+            limits:
+              cpu: 0.5
+              memory: 128Mi
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+              name: api-port
+          livenessProbe:
+            httpGet:
+              path: /
+              port: api-port
+          readinessProbe:
+            httpGet:
+              path: /
+              port: api-port
+          startupProbe:
+            httpGet:
+              path: / 
+              port: api-port

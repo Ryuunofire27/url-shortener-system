@@ -1,0 +1,44 @@
+stages:
+  - install
+  - ci
+  - test
+  - build
+  - deploy
+install-dependencies:
+  stage: install
+  script:
+    - npm install --location=global pnpm@7.28
+    - pnpm install
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 30 minutes
+
+lint:
+  stage: test
+  script:
+    - pnpm run lint
+
+test:
+  stage: test
+  script:
+    - pnpm run test:cov
+
+build:
+  stage: build
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - BUILD_IMAGE_EXTRA_ARGS="--build-arg ENV=$CI_ENVIRONMENT_NAME --build-arg
+      CI_PROJECT_NAME=$CI_PROJECT_NAME --build-arg NODE_ENV=$NODE_ENV --build-arg
+      PORT=$PORT
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG 
+
+deploy:
+  stage: deploy
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - ssh -t -i $EC2_RSA $EC2_USER@$EC2_SERVER 'IMAGE_TAG=$IMAGE_TAG CI_PROJECT_NAME=$CI_PROJECT_NAME CI_REGISTRY=$CI_REGISTRY' bash -l
